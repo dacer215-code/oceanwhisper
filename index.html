@@ -2,214 +2,157 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tarot Diary - 塔罗日记</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>罗勒秘境 · 塔罗日记</title>
     <style>
-        :root {
-            --bg-color: #f4e4e2; /* 底色 */
-            --paper-color: #fffaf5; /* 纸张颜色 */
-            --accent-color: #d4a373; /* 装饰金棕色 */
-            --text-color: #5d4037; /* 文字颜色 */
-        }
-
+        /* --- 1. 基础布局 --- */
         body {
-            background-color: var(--bg-color);
-            font-family: "PingFang SC", "Microsoft YaHei", serif;
-            color: var(--text-color);
             margin: 0;
+            padding: 0;
+            background-color: #e5d1d0; /* 匹配手帐边缘的底色 */
             display: flex;
             justify-content: center;
-            padding: 20px 10px;
+            align-items: flex-start;
+            min-height: 100vh;
+            font-family: "PingFang SC", "STHeiti", "Microsoft YaHei", serif;
         }
 
-        /* 模拟笔记本外框 */
+        /* --- 2. 核心容器（锁定比例） --- */
+        /* 使用你提供的 bg.jpg 作为背景，并锁定 706:1024 的手帐比例 */
         .notebook-container {
-            background: var(--paper-color);
-            max-width: 800px;
-            width: 100%;
-            min-height: 90vh;
-            border: 8px double var(--accent-color);
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            width: 100vw;
+            max-width: 706px; 
+            aspect-ratio: 706 / 1024;
+            background-image: url("bg.jpg");
+            background-size: 100% 100%;
             position: relative;
-            padding: 40px 20px;
-            /* 背景花纹：模拟蕾丝边框 */
-            background-image: radial-gradient(circle at 2px 2px, rgba(212, 163, 115, 0.1) 1px, transparent 0);
-            background-size: 20px 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            color: #5d4037; /* 手帐复古深棕色字体 */
         }
 
-        /* 顶部标题区 */
-        header {
-            text-align: center;
-            border-bottom: 1px solid #eee;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-        }
-
-        .main-title {
-            font-size: 48px;
-            font-family: "Georgia", serif;
-            font-style: italic;
-            margin: 0;
-            color: #b08968;
-        }
-
-        .sub-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 15px;
-            font-size: 14px;
-        }
-
-        /* 响应式网格：核心适配 */
-        .info-grid {
-            display: grid;
-            grid-template-columns: 1fr 2fr; /* 电脑端两栏 */
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        /* 塔罗牌显示区域 */
-        .tarot-cards {
-            display: flex;
-            justify-content: space-around;
-            gap: 10px;
-            margin: 30px 0;
-        }
-
-        .card-item {
-            flex: 1;
-            text-align: center;
-        }
-
-        .card-item img {
-            width: 100%;
-            max-width: 180px;
-            border-radius: 8px;
-            box-shadow: 2px 4px 10px rgba(0,0,0,0.2);
-            border: 2px solid #fff;
-        }
-
-        /* 运势文字区域 */
-        .fortune-section {
-            display: grid;
-            grid-template-columns: 1fr 1fr; /* 电脑端两栏 */
-            gap: 20px;
-        }
-
-        .fortune-box {
-            border-top: 1px dashed var(--accent-color);
-            padding-top: 10px;
-        }
-
-        .fortune-box h3 {
-            font-size: 16px;
-            margin-bottom: 5px;
-            color: #a67c52;
-        }
-
-        .fortune-box p {
-            font-size: 14px;
-            line-height: 1.6;
-            margin: 0;
-        }
-
-        /* 手机端适配：当屏幕小于 600px 时执行 */
-        @media (max-width: 600px) {
-            .info-grid, .fortune-section {
-                grid-template-columns: 1fr; /* 全部变一栏 */
-            }
-            
-            .main-title { font-size: 32px; }
-            
-            .tarot-cards {
-                flex-direction: row; /* 卡牌仍横向，但缩小 */
-            }
-
-            .notebook-container {
-                padding: 20px 15px;
-            }
-        }
-
-        /* 模拟右侧标签 */
-        .tabs {
+        /* --- 3. 绝对定位层（精准对齐框格） --- */
+        .layer {
             position: absolute;
-            right: -15px;
-            top: 50px;
+            line-height: 1.5;
+            word-break: break-all;
+            /* pointer-events: none; 让点击可以穿透到下方的导航层 */
+        }
+
+        /* 日期位置 */
+        .date-val {
+            top: 18.2%;
+            left: 17%;
+            font-size: 3.2vw;
+            font-weight: bold;
+        }
+
+        /* 星座对应（左上框） */
+        .astro-info {
+            top: 25.5%;
+            left: 14%;
+            width: 18%;
+            font-size: 1.8vw;
+        }
+
+        /* 能量对应（右上框） */
+        .energy-text {
+            top: 25.5%;
+            left: 35.5%;
+            width: 50%;
+            font-size: 1.8vw;
+        }
+
+        /* 塔罗牌照片（中间浅色大框） */
+        .tarot-photo-box {
+            top: 41.5%;
+            left: 14%;
+            width: 72%;
+            height: 20.5%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .tarot-photo-box img {
+            max-width: 95%;
+            max-height: 95%;
+            border-radius: 2px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        /* 今日建议（左下框） */
+        .advice-box {
+            top: 71.2%;
+            left: 14%;
+            width: 25%;
+            font-size: 1.8vw;
+        }
+
+        /* 今日运势（右下大格） */
+        .fortune-box {
+            top: 71.2%;
+            left: 41.5%;
+            width: 44%;
+            font-size: 1.8vw;
+        }
+
+        /* --- 4. 右侧导航（透明点击层） --- */
+        /* 覆盖在背景图右侧 01, 02, 03... 标签上的透明链接 */
+        .side-nav {
+            position: absolute;
+            right: 0;
+            top: 5.5%;
+            width: 12%; /* 宽度覆盖到数字标签上 */
+            height: 89%;
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            z-index: 10;
+        }
+        .nav-item {
+            flex: 1; /* 平分高度，点击每个数字都能跳转 */
+            cursor: pointer;
+            text-decoration: none;
+            /* border: 1px solid red; 调试时可以取消注释看位置 */
         }
 
-        .tab {
-            background: #e6ccb2;
-            padding: 10px 5px;
-            border-radius: 0 5px 5px 0;
-            font-size: 10px;
-            writing-mode: vertical-lr;
+        /* --- 5. 电脑端字体微调 --- */
+        @media (min-width: 706px) {
+            .date-val { font-size: 22px; }
+            .astro-info, .energy-text, .advice-box, .fortune-box { font-size: 13px; }
         }
     </style>
 </head>
 <body>
 
     <div class="notebook-container">
-        <div class="tabs">
-            <div class="tab">MARCH</div>
-            <div class="tab">DAILY</div>
-            <div class="tab">03-03</div>
+        <div class="layer date-val">2026年2月27日</div>
+
+        <div class="layer astro-info">
+            天秤座 / 双子座 / 狮子座<br><br>
+            2 / 12 / 5
         </div>
 
-        <header>
-            <div style="color: #666;">2026年3月3日</div>
-            <h1 class="main-title">Tarot Diary</h1>
-            <div style="color: #a67c52; font-weight: bold;">罗勒秘境 · 塔罗运势</div>
-        </header>
-
-        <div class="info-grid">
-            <div>
-                <p><strong>星座对应：</strong><br>天秤座 / 双子座 / 狮子座</p>
-                <p><strong>数字对应：</strong><br>2 / 12 / 5</p>
-            </div>
-            <div style="font-size: 13px; border-left: 1px solid #f0f0f0; padding-left: 15px;">
-                <strong>生活能量对应：</strong><br>
-                爱犹豫不决的 / 最近在纠结吃什么的 / 喜欢换座位换心情的 / 爱和朋友斗嘴的 / 偶尔刷剧刷到天亮的...
-            </div>
+        <div class="layer energy-text">
+            爱犹豫不决的 / 最近在纠结吃什么的 / 喜欢换座位的 / 爱和朋友斗嘴的 / 偶尔刷剧到天亮的...
         </div>
 
-        <div class="tarot-cards">
-            <div class="card-item">
-                <img src="https://via.placeholder.com/150x250/ffb6c1/ffffff?text=II+Swords" alt="宝剑二">
-                <p style="font-size: 12px;">宝剑二 (逆位)</p>
-            </div>
-            <div class="card-item">
-                <img src="https://via.placeholder.com/150x250/87cefa/ffffff?text=Hanged+Man" alt="倒吊人">
-                <p style="font-size: 12px;">倒吊人</p>
-            </div>
-            <div class="card-item">
-                <img src="https://via.placeholder.com/150x250/dda0dd/ffffff?text=5+Wands" alt="权杖五">
-                <p style="font-size: 12px;">权杖五</p>
-            </div>
+        <div class="layer tarot-photo-box">
+            <img src="20260227.jpg" alt="今日塔罗">
         </div>
 
-        <div class="fortune-section">
-            <div class="fortune-box">
-                <h3>[ 今日建议 ]</h3>
-                <p>面对选择，先冷静下来分析。换角度看问题，找到新突破口。勇敢行动，你会发现事情比想象中简单。</p>
-            </div>
-            <div class="fortune-box">
-                <h3>[ 财运 ]</h3>
-                <p>今天容易在选择上犹豫，别让不确定拖累你。投资和消费建议先观察，再做决定。小心比较和竞争。</p>
-            </div>
-            <div class="fortune-box">
-                <h3>[ 爱情 ]</h3>
-                <p>面对情感问题可能会有小争执。换个角度看问题，会发现对方的立场。大胆表达自己的想法。</p>
-            </div>
-            <div class="fortune-box">
-                <h3>[ 学习 ]</h3>
-                <p>适合尝试新的思路或方法。不要老套，用新角度可能效率更高。小小挑战会带来意想不到的收获。</p>
-            </div>
+        <div class="layer advice-box">
+            面对选择，先冷静下来分析。换个角度看问题，找到新突破口。勇敢行动。
         </div>
+
+        <div class="layer fortune-box">
+            <strong>财运：</strong>容易在选择上犹豫，别让不确定拖累你。投资建议先观察。<br><br>
+            <strong>爱情：</strong>情感问题可能有小争执，大胆表达想法，不要冷战。<br><br>
+            <strong>学习：</strong>适合尝试新思路，新角度效率更高。
+        </div>
+
+        <div class="side-nav">
+            <a href="index.html" class="nav-item" title="01-今日"></a>
+            <a href="diary/20260303.html" class="nav-item" title="02-往期"></a>
+            <a href="#" class="nav-item"></a> <a href="#" class="nav-item"></a> <a href="#" class="nav-item"></a> </div>
     </div>
 
 </body>
